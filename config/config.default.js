@@ -16,7 +16,7 @@ module.exports = (appInfo) => {
   // Configure server port (default is 7001)
   config.cluster = {
     listen: {
-      port: 3000,
+      port: 3001,
     },
   };
 
@@ -26,6 +26,7 @@ module.exports = (appInfo) => {
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
+    alibabaApiKey: "",
   };
 
   return {
