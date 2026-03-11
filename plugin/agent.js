@@ -1,35 +1,30 @@
 const {
-    ChatAlibabaTongyi,
+  ChatAlibabaTongyi,
 } = require("@langchain/community/chat_models/alibaba_tongyi");
-const {createAgent, providerStrategy} = require("langchain");
-const {SystemMessage} = require("@langchain/core/messages");
-const {MemorySaver} = require("@langchain/langgraph");
+const { createAgent, toolStrategy } = require("langchain");
+const { SystemMessage } = require("@langchain/core/messages");
+const { MemorySaver } = require("@langchain/langgraph");
 const loveReport = require("../struct/loveReport");
-const {StructuredOutputParser} = require("@langchain/core/output_parsers");
 
 const initAgentClient = (alibabaApiKey) => {
-    const parser = StructuredOutputParser.fromZodSchema(loveReport);
-    const formatInstructions = parser.parse()
+  const systemPrompt = `你扮演一名恋爱大师，每次对话后都要生成一份明确的恋爱计划，严格遵守loveReport结构体内容`;
 
-    const systemPrompt = `演深耕恋爱心理领域的专家。根据用户提供的信息，直接生成恋爱报告回复。${formatInstructions}`
-    console.log(systemPrompt)
-    const checkpointer = new MemorySaver();
-    const model = new ChatAlibabaTongyi({
-        model: "qwen-plus",
-        alibabaApiKey,
+  const checkpointer = new MemorySaver();
+  const model = new ChatAlibabaTongyi({
+    model: "qwen-plus",
+    alibabaApiKey,
+  });
 
-    });
-
-    return createAgent({
-        model,
-        tools: [],
-        checkpointer,
-        // systemPrompt: new SystemMessage(systemPrompt),
-        middleware: [],
-        responseFormat: providerStrategy(loveReport)
-    });
+  return createAgent({
+    model,
+    tools: [],
+    checkpointer,
+    systemPrompt: new SystemMessage(systemPrompt),
+    middleware: [],
+    responseFormat: toolStrategy(loveReport),
+  });
 };
 
 module.exports = {
-    initAgentClient,
+  initAgentClient,
 };
