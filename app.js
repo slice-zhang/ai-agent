@@ -20,7 +20,7 @@ class AppBootHook {
         this.app.config.alibabaApiKey,
       );
     } catch (error) {
-      console.log("启动自定义服务失败", error);
+      console.log("---------------------------------启动自定义服务失败", error);
     }
   }
 
